@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pulse — Customer Health Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <div>
+            <p class="brand-name">Pulse</p>
+            <p class="brand-tagline">Customer health at a glance</p>
+          </div>
+        </div>
+        <p class="learner-note">Learning build · HTML · CSS · JS</p>
+      </header>
+
+      <main>
+        <section class="summary" aria-label="Health summary">
+          <div class="summary-copy">
+            <h1>Who needs attention today?</h1>
+            <p>
+              Mock customer data with health scores from 0–100. Filter by status
+              or search by name to practice reading the list like a CS team
+              would.
+            </p>
+          </div>
+          <div class="stat-row" id="stat-row">
+            <!-- Filled by JavaScript -->
+          </div>
+        </section>
+
+        <section class="controls" aria-label="Filters">
+          <label class="search-field">
+            <span class="label">Search customers</span>
+            <input
+              type="search"
+              id="search-input"
+              placeholder="Try “Acme” or “Nova”"
+              autocomplete="off"
+            />
+          </label>
+
+          <fieldset class="status-filters">
+            <legend class="label">Status</legend>
+            <div class="chip-row" id="status-filters">
+              <button type="button" class="chip is-active" data-status="all">
+                All
+              </button>
+              <button type="button" class="chip" data-status="healthy">
+                Healthy
+              </button>
+              <button type="button" class="chip" data-status="at-risk">
+                At risk
+              </button>
+              <button type="button" class="chip" data-status="critical">
+                Critical
+              </button>
+            </div>
+          </fieldset>
+        </section>
+
+        <section class="customer-section" aria-label="Customer list">
+          <div class="table-head">
+            <h2>Customers</h2>
+            <p id="result-count"></p>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Customer</th>
+                  <th scope="col">Owner</th>
+                  <th scope="col">Health</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Last touch</th>
+                </tr>
+              </thead>
+              <tbody id="customer-tbody">
+                <!-- Filled by JavaScript -->
+              </tbody>
+            </table>
+          </div>
+          <p class="empty-state" id="empty-state" hidden>
+            No customers match those filters. Clear search or pick “All”.
+          </p>
+        </section>
+      </main>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
