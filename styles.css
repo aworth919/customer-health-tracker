@@ -219,6 +219,114 @@ body {
   color: #fff;
 }
 
+/* ----- Add customer form ----- */
+
+.add-customer {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  padding: 1.15rem 1.2rem 1.25rem;
+  border: 1px solid rgba(15, 118, 110, 0.28);
+  border-radius: calc(var(--radius) + 4px);
+  background:
+    linear-gradient(135deg, rgba(216, 243, 239, 0.65), rgba(255, 255, 255, 0.85));
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow);
+}
+
+.section-kicker {
+  margin: 0 0 0.35rem;
+  color: var(--teal);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.add-customer-copy h2 {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.add-customer-copy p {
+  margin: 0;
+  max-width: 40rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.add-form {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.85rem 0.75rem;
+  align-items: end;
+}
+
+.add-form label {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.add-form input,
+.add-form select {
+  width: 100%;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.add-form input:focus,
+.add-form select:focus {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.18);
+}
+
+.form-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.btn-primary {
+  padding: 0.75rem 1.2rem;
+  border: 0;
+  border-radius: 12px;
+  background: var(--teal);
+  color: #fff;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.btn-primary:hover {
+  background: #0d9488;
+}
+
+.btn-primary:active {
+  transform: translateY(1px);
+}
+
+.form-hint {
+  margin: 0;
+  color: var(--teal);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
 /* ----- Customer table ----- */
 
 .customer-section {
@@ -355,6 +463,12 @@ th {
 
 /* ----- Responsive ----- */
 
+@media (max-width: 900px) {
+  .add-form {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
 @media (max-width: 800px) {
   .stat-row,
   .controls {
@@ -372,7 +486,8 @@ th {
   }
 
   .stat-row,
-  .controls {
+  .controls,
+  .add-form {
     grid-template-columns: 1fr;
   }
 

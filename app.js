@@ -5,6 +5,7 @@
    2. Figures out health status from a score
    3. Draws the summary + table
    4. Listens for search / filter clicks
+   5. Handles the “Add customer” form
    ============================================================ */
 
 /** @typedef {"healthy" | "at-risk" | "critical"} HealthStatus */
@@ -158,6 +159,33 @@ function renderStats() {
   `;
 }
 
+/** Keep user-typed text from being treated as HTML */
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
+}
+
+/** Today's date as YYYY-MM-DD (for new customers) */
+function todayIsoDate() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+/** Next id so each customer stays unique */
+function nextCustomerId() {
+  const highest = customers.reduce(
+    (max, customer) => Math.max(max, customer.id),
+    0
+  );
+  return highest + 1;
+}
+
 /** Draw one table row for a customer */
 function customerRowHtml(customer) {
   const status = getStatus(customer.score);
@@ -165,10 +193,10 @@ function customerRowHtml(customer) {
   return `
     <tr>
       <td>
-        <p class="customer-name">${customer.name}</p>
-        <p class="customer-plan">${customer.plan}</p>
+        <p class="customer-name">${escapeHtml(customer.name)}</p>
+        <p class="customer-plan">${escapeHtml(customer.plan)}</p>
       </td>
-      <td>${customer.owner}</td>
+      <td>${escapeHtml(customer.owner)}</td>
       <td class="health-cell">
         <div class="health-bar">
           <span class="health-score">${customer.score}</span>
@@ -210,19 +238,58 @@ function renderTable() {
   tbody.innerHTML = filtered.map(customerRowHtml).join("");
 }
 
-/** Re-draw anything that depends on filters */
+/** Re-draw table + summary (used after filters or adding) */
 function render() {
+  renderStats();
   renderTable();
 }
 
-/** Wire up search box + filter chips */
+/** Read the form, add a customer, refresh the page */
+function handleAddCustomer(event) {
+  // Stop the browser from reloading the page on submit
+  event.preventDefault();
+
+  const form = event.target;
+  const data = new FormData(form);
+
+  const name = String(data.get("name") || "").trim();
+  const plan = String(data.get("plan") || "").trim();
+  const owner = String(data.get("owner") || "").trim();
+  const score = Number(data.get("score"));
+
+  if (!name || !plan || !owner || Number.isNaN(score)) return;
+  if (score < 0 || score > 100) return;
+
+  customers.push({
+    id: nextCustomerId(),
+    name,
+    plan,
+    owner,
+    score,
+    lastTouch: todayIsoDate(),
+  });
+
+  form.reset();
+  form.elements.score.value = "70";
+
+  const hint = document.getElementById("form-hint");
+  hint.hidden = false;
+  window.setTimeout(() => {
+    hint.hidden = true;
+  }, 2000);
+
+  render();
+}
+
+/** Wire up search, filters, and the add form */
 function setupEvents() {
   const searchInput = document.getElementById("search-input");
   const filterRow = document.getElementById("status-filters");
+  const addForm = document.getElementById("add-customer-form");
 
   searchInput.addEventListener("input", (event) => {
     state.search = event.target.value;
-    render();
+    renderTable();
   });
 
   filterRow.addEventListener("click", (event) => {
@@ -235,13 +302,14 @@ function setupEvents() {
       chip.classList.toggle("is-active", chip === button);
     });
 
-    render();
+    renderTable();
   });
+
+  addForm.addEventListener("submit", handleAddCustomer);
 }
 
 /** Kick everything off when the page loads */
 function init() {
-  renderStats();
   setupEvents();
   render();
 }

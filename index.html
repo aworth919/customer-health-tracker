@@ -40,6 +40,64 @@
           </div>
         </section>
 
+        <section class="add-customer" aria-label="Add a customer">
+          <div class="add-customer-copy">
+            <p class="section-kicker">New feature</p>
+            <h2>Add a customer</h2>
+            <p>
+              Practice forms: fill this out and the new row appears in the list
+              below. Data stays in the browser until you refresh.
+            </p>
+          </div>
+          <form id="add-customer-form" class="add-form">
+            <label>
+              <span class="label">Customer name</span>
+              <input
+                type="text"
+                name="name"
+                required
+                maxlength="80"
+                placeholder="e.g. Northwind Labs"
+                autocomplete="organization"
+              />
+            </label>
+            <label>
+              <span class="label">Plan</span>
+              <select name="plan" required>
+                <option value="Starter">Starter</option>
+                <option value="Growth">Growth</option>
+                <option value="Enterprise">Enterprise</option>
+              </select>
+            </label>
+            <label>
+              <span class="label">Owner</span>
+              <input
+                type="text"
+                name="owner"
+                required
+                maxlength="60"
+                placeholder="e.g. Maya Chen"
+                autocomplete="name"
+              />
+            </label>
+            <label>
+              <span class="label">Health score (0–100)</span>
+              <input
+                type="number"
+                name="score"
+                required
+                min="0"
+                max="100"
+                value="70"
+              />
+            </label>
+            <div class="form-actions">
+              <button type="submit" class="btn-primary">Add customer</button>
+              <p class="form-hint" id="form-hint" hidden>Added to the list.</p>
+            </div>
+          </form>
+        </section>
+
         <section class="controls" aria-label="Filters">
           <label class="search-field">
             <span class="label">Search customers</span>
