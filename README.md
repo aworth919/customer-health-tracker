@@ -1,20 +1,37 @@
 # Pulse — Customer Health Tracker
 
-A beginner-friendly mock app for tracking customer health scores.
+A beginner-friendly app for tracking customer health scores.
 
 Built with:
 
 - **HTML** — page structure
 - **CSS** — layout and styling
-- **JavaScript** — mock data, filters, and updating the page
+- **JavaScript** — data, filters, detail view, and CSV import
 
 ## Open it locally
 
 1. Open the project folder in Cursor.
 2. Open `index.html` in your browser  
-   (right-click the file → Open with Live Server, or drag it into Chrome/Safari).
+   (drag it into Chrome/Safari, or use Live Server).
 
-You should see a list of mock customers, summary stats, search, and status filters.
+You should see summary stats, search/status filters, and a customer table.
+
+## What you can do
+
+- Add customers (saved in the browser with `localStorage`)
+- Click a row for a detail view and editable score drivers
+- Import a Looker CSV (for example `enterprise_plan_customers.csv`)
+- Sort by customer, owner, health, status, or last touch
+
+## Real CSV data
+
+Customer exports belong on your machine only. This repo gitignores `*.csv` and `data/` so real account data is not pushed to GitHub.
+
+To try the import:
+
+1. Click **Choose CSV file** in the app
+2. Select your Looker export
+3. Browse, filter, sort, and open account details
 
 ## Project files
 
@@ -23,15 +40,15 @@ You should see a list of mock customers, summary stats, search, and status filte
 | `index.html` | Structure of the page |
 | `styles.css` | Look and layout |
 | `app.js` | Data + interactive behavior |
+| `.gitignore` | Keeps local CSV exports out of git |
 
-## Git & GitHub (next steps)
-
-This folder is already a Git repository. Typical flow once you're ready:
+## Git basics
 
 ```bash
 git status
 git add .
 git commit -m "Describe what changed"
+git push
 ```
 
-Then create a GitHub repo and push (we can do this together when you're ready).
+For reviewable changes, use a branch + pull request into `main` instead of committing straight to `main`.
