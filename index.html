@@ -26,132 +26,150 @@
       </header>
 
       <main>
-        <section class="summary" aria-label="Health summary">
-          <div class="summary-copy">
-            <h1>Who needs attention today?</h1>
-            <p>
-              Mock customer data with health scores from 0–100. Filter by status
-              or search by name to practice reading the list like a CS team
-              would.
+        <!-- LIST VIEW: summary, add form, filters, table -->
+        <div id="list-view">
+          <section class="summary" aria-label="Health summary">
+            <div class="summary-copy">
+              <h1>Who needs attention today?</h1>
+              <p>
+                Mock customer data with health scores from 0–100. Filter by
+                status, search by name, or click a row to open a detail view.
+              </p>
+            </div>
+            <div class="stat-row" id="stat-row">
+              <!-- Filled by JavaScript -->
+            </div>
+          </section>
+
+          <section class="add-customer" aria-label="Add a customer">
+            <div class="add-customer-copy">
+              <p class="section-kicker">New feature</p>
+              <h2>Add a customer</h2>
+              <p>
+                Practice forms: fill this out and the new row appears in the
+                list below. Data stays in the browser until you refresh.
+              </p>
+            </div>
+            <form id="add-customer-form" class="add-form">
+              <label>
+                <span class="label">Customer name</span>
+                <input
+                  type="text"
+                  name="name"
+                  required
+                  maxlength="80"
+                  placeholder="e.g. Northwind Labs"
+                  autocomplete="organization"
+                />
+              </label>
+              <label>
+                <span class="label">Plan</span>
+                <select name="plan" required>
+                  <option value="Starter">Starter</option>
+                  <option value="Growth">Growth</option>
+                  <option value="Enterprise">Enterprise</option>
+                </select>
+              </label>
+              <label>
+                <span class="label">Owner</span>
+                <input
+                  type="text"
+                  name="owner"
+                  required
+                  maxlength="60"
+                  placeholder="e.g. Maya Chen"
+                  autocomplete="name"
+                />
+              </label>
+              <label>
+                <span class="label">Health score (0–100)</span>
+                <input
+                  type="number"
+                  name="score"
+                  required
+                  min="0"
+                  max="100"
+                  value="70"
+                />
+              </label>
+              <div class="form-actions">
+                <button type="submit" class="btn-primary">Add customer</button>
+                <p class="form-hint" id="form-hint" hidden>Added to the list.</p>
+              </div>
+            </form>
+          </section>
+
+          <section class="controls" aria-label="Filters">
+            <label class="search-field">
+              <span class="label">Search customers</span>
+              <input
+                type="search"
+                id="search-input"
+                placeholder="Try “Acme” or “Nova”"
+                autocomplete="off"
+              />
+            </label>
+
+            <fieldset class="status-filters">
+              <legend class="label">Status</legend>
+              <div class="chip-row" id="status-filters">
+                <button type="button" class="chip is-active" data-status="all">
+                  All
+                </button>
+                <button type="button" class="chip" data-status="healthy">
+                  Healthy
+                </button>
+                <button type="button" class="chip" data-status="at-risk">
+                  At risk
+                </button>
+                <button type="button" class="chip" data-status="critical">
+                  Critical
+                </button>
+              </div>
+            </fieldset>
+          </section>
+
+          <section class="customer-section" aria-label="Customer list">
+            <div class="table-head">
+              <h2>Customers</h2>
+              <p id="result-count"></p>
+            </div>
+            <p class="table-hint">Click a customer row to open details.</p>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th scope="col">Customer</th>
+                    <th scope="col">Owner</th>
+                    <th scope="col">Health</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Last touch</th>
+                  </tr>
+                </thead>
+                <tbody id="customer-tbody">
+                  <!-- Filled by JavaScript -->
+                </tbody>
+              </table>
+            </div>
+            <p class="empty-state" id="empty-state" hidden>
+              No customers match those filters. Clear search or pick “All”.
             </p>
-          </div>
-          <div class="stat-row" id="stat-row">
+          </section>
+        </div>
+
+        <!-- DETAIL VIEW: one customer at a time -->
+        <section
+          id="detail-view"
+          class="detail-view"
+          aria-label="Customer detail"
+          hidden
+        >
+          <button type="button" class="btn-back" id="back-to-list">
+            ← Back to list
+          </button>
+          <div id="detail-content">
             <!-- Filled by JavaScript -->
           </div>
-        </section>
-
-        <section class="add-customer" aria-label="Add a customer">
-          <div class="add-customer-copy">
-            <p class="section-kicker">New feature</p>
-            <h2>Add a customer</h2>
-            <p>
-              Practice forms: fill this out and the new row appears in the list
-              below. Data stays in the browser until you refresh.
-            </p>
-          </div>
-          <form id="add-customer-form" class="add-form">
-            <label>
-              <span class="label">Customer name</span>
-              <input
-                type="text"
-                name="name"
-                required
-                maxlength="80"
-                placeholder="e.g. Northwind Labs"
-                autocomplete="organization"
-              />
-            </label>
-            <label>
-              <span class="label">Plan</span>
-              <select name="plan" required>
-                <option value="Starter">Starter</option>
-                <option value="Growth">Growth</option>
-                <option value="Enterprise">Enterprise</option>
-              </select>
-            </label>
-            <label>
-              <span class="label">Owner</span>
-              <input
-                type="text"
-                name="owner"
-                required
-                maxlength="60"
-                placeholder="e.g. Maya Chen"
-                autocomplete="name"
-              />
-            </label>
-            <label>
-              <span class="label">Health score (0–100)</span>
-              <input
-                type="number"
-                name="score"
-                required
-                min="0"
-                max="100"
-                value="70"
-              />
-            </label>
-            <div class="form-actions">
-              <button type="submit" class="btn-primary">Add customer</button>
-              <p class="form-hint" id="form-hint" hidden>Added to the list.</p>
-            </div>
-          </form>
-        </section>
-
-        <section class="controls" aria-label="Filters">
-          <label class="search-field">
-            <span class="label">Search customers</span>
-            <input
-              type="search"
-              id="search-input"
-              placeholder="Try “Acme” or “Nova”"
-              autocomplete="off"
-            />
-          </label>
-
-          <fieldset class="status-filters">
-            <legend class="label">Status</legend>
-            <div class="chip-row" id="status-filters">
-              <button type="button" class="chip is-active" data-status="all">
-                All
-              </button>
-              <button type="button" class="chip" data-status="healthy">
-                Healthy
-              </button>
-              <button type="button" class="chip" data-status="at-risk">
-                At risk
-              </button>
-              <button type="button" class="chip" data-status="critical">
-                Critical
-              </button>
-            </div>
-          </fieldset>
-        </section>
-
-        <section class="customer-section" aria-label="Customer list">
-          <div class="table-head">
-            <h2>Customers</h2>
-            <p id="result-count"></p>
-          </div>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th scope="col">Customer</th>
-                  <th scope="col">Owner</th>
-                  <th scope="col">Health</th>
-                  <th scope="col">Status</th>
-                  <th scope="col">Last touch</th>
-                </tr>
-              </thead>
-              <tbody id="customer-tbody">
-                <!-- Filled by JavaScript -->
-              </tbody>
-            </table>
-          </div>
-          <p class="empty-state" id="empty-state" hidden>
-            No customers match those filters. Clear search or pick “All”.
-          </p>
         </section>
       </main>
     </div>

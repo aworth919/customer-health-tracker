@@ -358,6 +358,13 @@ body {
   font-size: 0.9rem;
 }
 
+.table-hint {
+  margin: -0.35rem 0 0.85rem;
+  padding: 0 0.35rem;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
 .table-wrap {
   overflow-x: auto;
 }
@@ -382,6 +389,17 @@ th {
   letter-spacing: 0.05em;
   text-transform: uppercase;
   border-top: 0;
+}
+
+.customer-row {
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.customer-row:hover,
+.customer-row:focus-visible {
+  background: rgba(15, 118, 110, 0.06);
+  outline: none;
 }
 
 .customer-name {
@@ -461,6 +479,177 @@ th {
   text-align: center;
 }
 
+/* ----- Detail view ----- */
+
+.detail-view {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.detail-view[hidden] {
+  display: none;
+}
+
+.btn-back {
+  justify-self: start;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.btn-back:hover {
+  border-color: rgba(15, 118, 110, 0.45);
+  background: #fff;
+}
+
+.detail-hero {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem 1.3rem;
+  border: 1px solid var(--line);
+  border-radius: calc(var(--radius) + 4px);
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: var(--shadow);
+}
+
+.detail-title {
+  margin: 0.15rem 0 0.35rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.detail-subtitle {
+  margin: 0;
+  color: var(--muted);
+  font-size: 1.05rem;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.detail-stat {
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+  backdrop-filter: blur(8px);
+  box-shadow: var(--shadow);
+}
+
+.detail-stat-small {
+  font-size: 1.35rem;
+}
+
+.detail-track {
+  margin-top: 0.75rem;
+}
+
+.detail-meta {
+  margin: 0.45rem 0 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.detail-guidance {
+  padding: 1.2rem 1.3rem;
+  border: 1px solid rgba(15, 118, 110, 0.22);
+  border-radius: calc(var(--radius) + 4px);
+  background:
+    linear-gradient(135deg, rgba(216, 243, 239, 0.55), rgba(255, 255, 255, 0.88));
+  box-shadow: var(--shadow);
+}
+
+.detail-guidance h2 {
+  margin: 0 0 0.45rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.detail-guidance p {
+  margin: 0;
+  max-width: 42rem;
+  color: var(--ink);
+  font-size: 1.02rem;
+  line-height: 1.55;
+}
+
+.detail-missing {
+  margin: 0;
+  color: var(--muted);
+}
+
+.score-drivers {
+  padding: 1.2rem 1.3rem 1.35rem;
+  border: 1px solid var(--line);
+  border-radius: calc(var(--radius) + 4px);
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: var(--shadow);
+}
+
+.score-drivers-copy h2 {
+  margin: 0 0 0.4rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.score-drivers-copy p {
+  margin: 0 0 1.1rem;
+  max-width: 44rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.factor-list {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.factor-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: 1rem;
+  align-items: center;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--line);
+}
+
+.factor-row:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.factor-label {
+  margin: 0;
+  font-weight: 600;
+}
+
+.factor-source {
+  margin: 0.2rem 0 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.factor-meter {
+  display: grid;
+  gap: 0.35rem;
+}
+
 /* ----- Responsive ----- */
 
 @media (max-width: 900px) {
@@ -487,11 +676,18 @@ th {
 
   .stat-row,
   .controls,
-  .add-form {
+  .add-form,
+  .detail-grid,
+  .factor-row {
     grid-template-columns: 1fr;
   }
 
-  .topbar {
+  .topbar,
+  .detail-hero {
     align-items: flex-start;
+  }
+
+  .detail-hero {
+    flex-direction: column;
   }
 }
