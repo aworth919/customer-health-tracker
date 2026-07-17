@@ -219,6 +219,94 @@ body {
   color: #fff;
 }
 
+/* ----- Import CSV ----- */
+
+.import-data {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  padding: 1.15rem 1.2rem 1.25rem;
+  border: 1px solid rgba(180, 83, 9, 0.22);
+  border-radius: calc(var(--radius) + 4px);
+  background:
+    linear-gradient(135deg, rgba(253, 232, 200, 0.45), rgba(255, 255, 255, 0.88));
+  box-shadow: var(--shadow);
+}
+
+.import-copy h2 {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.import-copy p {
+  margin: 0;
+  max-width: 40rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.import-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.file-picker {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.insight-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.account-insights {
+  padding: 1.2rem 1.3rem 1.35rem;
+  border: 1px solid var(--line);
+  border-radius: calc(var(--radius) + 4px);
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: var(--shadow);
+}
+
+.insight-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem 1.25rem;
+  margin: 0;
+}
+
+.insight-list div {
+  margin: 0;
+}
+
+.insight-list dt {
+  margin: 0 0 0.2rem;
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.insight-list dd {
+  margin: 0;
+  line-height: 1.45;
+  white-space: pre-wrap;
+}
+
+.insight-wide {
+  grid-column: 1 / -1;
+}
+
 /* ----- Add customer form ----- */
 
 .add-customer {
@@ -415,6 +503,31 @@ th {
   letter-spacing: 0.05em;
   text-transform: uppercase;
   border-top: 0;
+}
+
+.sort-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+}
+
+.sort-btn:hover,
+.sort-btn.is-active {
+  color: var(--teal);
+}
+
+.sort-btn:focus-visible {
+  outline: 2px solid rgba(15, 118, 110, 0.35);
+  outline-offset: 3px;
+  border-radius: 4px;
 }
 
 .customer-row {
@@ -676,6 +789,51 @@ th {
   gap: 0.35rem;
 }
 
+.factors-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.factor-input {
+  width: 5.5rem;
+  padding: 0.45rem 0.55rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  outline: none;
+}
+
+.factor-input:focus {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.18);
+}
+
+.meeting-field {
+  display: grid;
+  gap: 0.4rem;
+  max-width: 16rem;
+}
+
+.meeting-field input[type="date"] {
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--ink);
+  font: inherit;
+  outline: none;
+}
+
+.meeting-field input[type="date"]:focus {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.18);
+}
+
 /* ----- Responsive ----- */
 
 @media (max-width: 900px) {
@@ -704,7 +862,9 @@ th {
   .controls,
   .add-form,
   .detail-grid,
-  .factor-row {
+  .factor-row,
+  .insight-grid,
+  .insight-list {
     grid-template-columns: 1fr;
   }
 

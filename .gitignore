@@ -1,0 +1,4 @@
+# Keep real customer exports off GitHub
+*.csv
+data/
+.DS_Store

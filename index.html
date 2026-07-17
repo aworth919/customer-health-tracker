@@ -41,6 +41,30 @@
             </div>
           </section>
 
+          <section class="import-data" aria-label="Import customer CSV">
+            <div class="import-copy">
+              <p class="section-kicker">Real data</p>
+              <h2>Import Looker CSV</h2>
+              <p>
+                Load <code>enterprise_plan_customers.csv</code> from your
+                computer. This stays in your browser only — the CSV is
+                gitignored so it won’t be pushed to GitHub.
+              </p>
+            </div>
+            <div class="import-actions">
+              <label class="btn-secondary file-picker">
+                Choose CSV file
+                <input
+                  type="file"
+                  id="csv-file-input"
+                  accept=".csv,text/csv"
+                  hidden
+                />
+              </label>
+              <p class="form-hint" id="import-hint" hidden></p>
+            </div>
+          </section>
+
           <section class="add-customer" aria-label="Add a customer">
             <div class="add-customer-copy">
               <p class="section-kicker">Persisted in your browser</p>
@@ -109,7 +133,7 @@
               <input
                 type="search"
                 id="search-input"
-                placeholder="Try “Acme” or “Nova”"
+                placeholder="Search by customer or CSM"
                 autocomplete="off"
               />
             </label>
@@ -138,16 +162,58 @@
               <h2>Customers</h2>
               <p id="result-count"></p>
             </div>
-            <p class="table-hint">Click a customer row to open details.</p>
+            <p class="table-hint">
+              Click a column header to sort. Click a row to open details.
+            </p>
             <div class="table-wrap">
               <table>
                 <thead>
-                  <tr>
-                    <th scope="col">Customer</th>
-                    <th scope="col">Owner</th>
-                    <th scope="col">Health</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Last touch</th>
+                  <tr id="customer-sort-headers">
+                    <th scope="col">
+                      <button
+                        type="button"
+                        class="sort-btn"
+                        data-sort="name"
+                      >
+                        Customer
+                      </button>
+                    </th>
+                    <th scope="col">
+                      <button
+                        type="button"
+                        class="sort-btn"
+                        data-sort="owner"
+                      >
+                        Owner
+                      </button>
+                    </th>
+                    <th scope="col">
+                      <button
+                        type="button"
+                        class="sort-btn"
+                        data-sort="health"
+                      >
+                        Health
+                      </button>
+                    </th>
+                    <th scope="col">
+                      <button
+                        type="button"
+                        class="sort-btn"
+                        data-sort="status"
+                      >
+                        Status
+                      </button>
+                    </th>
+                    <th scope="col">
+                      <button
+                        type="button"
+                        class="sort-btn"
+                        data-sort="lastTouch"
+                      >
+                        Last touch
+                      </button>
+                    </th>
                   </tr>
                 </thead>
                 <tbody id="customer-tbody">
