@@ -3,11 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pulse — Customer Health Tracker</title>
+    <title>LaunchDarkly Pulse — Customer Health Tracker</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
@@ -16,13 +16,16 @@
     <div class="page">
       <header class="topbar">
         <div class="brand">
-          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-mark" aria-hidden="true">
+            <span class="brand-mark-toggle"></span>
+          </span>
           <div>
+            <p class="brand-eyebrow">LaunchDarkly</p>
             <p class="brand-name">Pulse</p>
             <p class="brand-tagline">Customer health at a glance</p>
           </div>
         </div>
-        <p class="learner-note">Learning build · HTML · CSS · JS</p>
+        <p class="learner-note">Internal learning build · HTML · CSS · JS</p>
       </header>
 
       <main>
@@ -32,8 +35,9 @@
             <div class="summary-copy">
               <h1>Who needs attention today?</h1>
               <p>
-                Mock customer data with health scores from 0–100. Filter by
-                status, search by name, or click a row to open a detail view.
+                LaunchDarkly customer health scores from Looker. Filter by
+                status, search by CSM, sort columns, or open a row for account
+                detail.
               </p>
             </div>
             <div class="stat-row" id="stat-row">

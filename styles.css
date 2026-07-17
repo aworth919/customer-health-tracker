@@ -1,24 +1,41 @@
 /* ============================================================
-   Pulse — styles
-   CSS controls look & layout. Classes in HTML are styled here.
+   LaunchDarkly Pulse — styles
+   Dark “control room” look inspired by LD brand tokens:
+   Midnight Ink, Carbon, Voltage Blue, Signal Violet.
    ============================================================ */
 
 :root {
-  --ink: #14212b;
-  --muted: #5a6b76;
-  --paper: #f3f7f4;
-  --panel: rgba(255, 255, 255, 0.72);
-  --line: rgba(20, 33, 43, 0.12);
-  --teal: #0f766e;
-  --teal-soft: #d8f3ef;
-  --amber: #b45309;
-  --amber-soft: #fde8c8;
-  --coral: #c2410c;
-  --coral-soft: #ffe1d6;
-  --shadow: 0 18px 40px rgba(20, 33, 43, 0.08);
+  --midnight: #0e0e0e;
+  --carbon: #191919;
+  --smoke: #2c2c2c;
+  --graphite: #414042;
+  --steel: #58595b;
+  --slate: #6d6e71;
+  --fog: #a7a9ac;
+  --ash: #d1d3d4;
+  --paper: #ffffff;
+  --voltage: #405bff;
+  --signal: #7084ff;
+  --plasma: #3dd6f5;
+  --signal-gradient: linear-gradient(135deg, #405bff 0%, #7084ff 100%);
+  --ink: var(--paper);
+  --muted: var(--fog);
+  --panel: rgba(25, 25, 25, 0.92);
+  --line: rgba(255, 255, 255, 0.1);
+  --accent: var(--voltage);
+  --accent-soft: rgba(64, 91, 255, 0.18);
+  --healthy: #3dd6a5;
+  --healthy-soft: rgba(61, 214, 165, 0.16);
+  --amber: #f5b942;
+  --amber-soft: rgba(245, 185, 66, 0.16);
+  --coral: #ff6b6b;
+  --coral-soft: rgba(255, 107, 107, 0.16);
+  --shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+  --glow: 0 0 40px rgba(64, 91, 255, 0.22);
   --radius: 18px;
-  --font-display: "Fraunces", Georgia, serif;
-  --font-body: "Outfit", sans-serif;
+  --font-display: "Sora", system-ui, sans-serif;
+  --font-body: "Sora", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
 }
 
 *,
@@ -32,10 +49,12 @@ body {
   min-height: 100vh;
   font-family: var(--font-body);
   color: var(--ink);
+  color-scheme: dark;
   background:
-    radial-gradient(ellipse 80% 50% at 10% -10%, #c8ebe4 0%, transparent 55%),
-    radial-gradient(ellipse 60% 40% at 100% 0%, #f6d9c8 0%, transparent 50%),
-    linear-gradient(165deg, #eef5f1 0%, #f7f3ee 45%, #e8f0ec 100%);
+    radial-gradient(ellipse 70% 45% at 8% -5%, rgba(64, 91, 255, 0.28) 0%, transparent 55%),
+    radial-gradient(ellipse 55% 40% at 100% 0%, rgba(61, 214, 245, 0.12) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 35% at 70% 100%, rgba(112, 132, 255, 0.12) 0%, transparent 55%),
+    var(--midnight);
 }
 
 .page {
@@ -61,26 +80,64 @@ body {
 }
 
 .brand-mark {
-  width: 2.5rem;
-  height: 2.5rem;
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
   border-radius: 0.85rem;
-  background:
-    linear-gradient(135deg, #0f766e 0%, #1d9a8a 55%, #f0a06a 100%);
-  box-shadow: 0 8px 20px rgba(15, 118, 110, 0.35);
+  background: var(--carbon);
+  border: 1px solid rgba(112, 132, 255, 0.45);
+  box-shadow: var(--glow);
+}
+
+.brand-mark-toggle {
+  width: 1.35rem;
+  height: 0.75rem;
+  border-radius: 999px;
+  background: var(--signal-gradient);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+  position: relative;
+}
+
+.brand-mark-toggle::after {
+  content: "";
+  position: absolute;
+  top: 0.08rem;
+  right: 0.08rem;
+  width: 0.58rem;
+  height: 0.58rem;
+  border-radius: 50%;
+  background: var(--paper);
+  box-shadow: 0 0 10px rgba(64, 91, 255, 0.55);
+}
+
+.brand-eyebrow {
+  margin: 0;
+  color: var(--signal);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .brand-name {
-  margin: 0;
+  margin: 0.1rem 0 0;
   font-family: var(--font-display);
-  font-size: 1.65rem;
+  font-size: 1.55rem;
   font-weight: 700;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
   line-height: 1.1;
+  background: var(--signal-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .brand-tagline,
 .learner-note {
-  margin: 0.15rem 0 0;
+  margin: 0.2rem 0 0;
   color: var(--muted);
   font-size: 0.9rem;
 }
@@ -89,7 +146,10 @@ body {
   padding: 0.4rem 0.75rem;
   border: 1px solid var(--line);
   border-radius: 999px;
-  background: var(--panel);
+  background: rgba(25, 25, 25, 0.8);
+  color: var(--ash);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
 }
 
 /* ----- Summary ----- */
@@ -107,6 +167,7 @@ body {
   font-weight: 700;
   letter-spacing: -0.03em;
   line-height: 1.15;
+  color: var(--paper);
 }
 
 .summary-copy p {
@@ -171,7 +232,7 @@ body {
   padding: 0.85rem 1rem;
   border: 1px solid var(--line);
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.85);
+  background: var(--carbon);
   color: var(--ink);
   font: inherit;
   font-size: 1rem;
@@ -180,8 +241,8 @@ body {
 }
 
 .search-field input:focus {
-  border-color: var(--teal);
-  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.18);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(64, 91, 255, 0.28);
 }
 
 .status-filters {
@@ -200,7 +261,7 @@ body {
   padding: 0.65rem 0.95rem;
   border: 1px solid var(--line);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(25, 25, 25, 0.9);
   color: var(--ink);
   font: inherit;
   font-size: 0.92rem;
@@ -210,13 +271,13 @@ body {
 }
 
 .chip:hover {
-  border-color: rgba(15, 118, 110, 0.4);
+  border-color: rgba(112, 132, 255, 0.45);
 }
 
 .chip.is-active {
-  background: var(--teal);
-  border-color: var(--teal);
-  color: #fff;
+  background: var(--signal-gradient);
+  border-color: transparent;
+  color: var(--paper);
 }
 
 /* ----- Import CSV ----- */
@@ -226,10 +287,10 @@ body {
   gap: 1rem;
   margin-bottom: 1.25rem;
   padding: 1.15rem 1.2rem 1.25rem;
-  border: 1px solid rgba(180, 83, 9, 0.22);
+  border: 1px solid rgba(64, 91, 255, 0.35);
   border-radius: calc(var(--radius) + 4px);
   background:
-    linear-gradient(135deg, rgba(253, 232, 200, 0.45), rgba(255, 255, 255, 0.88));
+    linear-gradient(135deg, rgba(64, 91, 255, 0.18), rgba(25, 25, 25, 0.95));
   box-shadow: var(--shadow);
 }
 
@@ -273,7 +334,7 @@ body {
   padding: 1.2rem 1.3rem 1.35rem;
   border: 1px solid var(--line);
   border-radius: calc(var(--radius) + 4px);
-  background: rgba(255, 255, 255, 0.82);
+  background: var(--carbon);
   box-shadow: var(--shadow);
 }
 
@@ -314,19 +375,20 @@ body {
   gap: 1rem;
   margin-bottom: 1.25rem;
   padding: 1.15rem 1.2rem 1.25rem;
-  border: 1px solid rgba(15, 118, 110, 0.28);
+  border: 1px solid rgba(64, 91, 255, 0.35);
   border-radius: calc(var(--radius) + 4px);
   background:
-    linear-gradient(135deg, rgba(216, 243, 239, 0.65), rgba(255, 255, 255, 0.85));
+    linear-gradient(135deg, rgba(64, 91, 255, 0.2), rgba(25, 25, 25, 0.95));
   backdrop-filter: blur(10px);
   box-shadow: var(--shadow);
 }
 
 .section-kicker {
   margin: 0 0 0.35rem;
-  color: var(--teal);
+  color: var(--signal);
+  font-family: var(--font-mono);
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -365,7 +427,7 @@ body {
   padding: 0.75rem 0.9rem;
   border: 1px solid var(--line);
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.9);
+  background: #121212;
   color: var(--ink);
   font: inherit;
   font-size: 0.95rem;
@@ -375,8 +437,8 @@ body {
 
 .add-form input:focus,
 .add-form select:focus {
-  border-color: var(--teal);
-  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.18);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(64, 91, 255, 0.28);
 }
 
 .form-actions {
@@ -391,8 +453,8 @@ body {
   padding: 0.75rem 1.2rem;
   border: 0;
   border-radius: 12px;
-  background: var(--teal);
-  color: #fff;
+  background: var(--signal-gradient);
+  color: var(--paper);
   font: inherit;
   font-size: 0.95rem;
   font-weight: 600;
@@ -401,7 +463,7 @@ body {
 }
 
 .btn-primary:hover {
-  background: #0d9488;
+  filter: brightness(1.08);
 }
 
 .btn-primary:active {
@@ -412,7 +474,7 @@ body {
   padding: 0.75rem 1.1rem;
   border: 1px solid var(--line);
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.85);
+  background: var(--carbon);
   color: var(--ink);
   font: inherit;
   font-size: 0.95rem;
@@ -422,21 +484,22 @@ body {
 }
 
 .btn-secondary:hover {
-  border-color: rgba(15, 118, 110, 0.4);
-  background: #fff;
+  border-color: rgba(112, 132, 255, 0.55);
+  background: rgba(64, 91, 255, 0.12);
+  color: var(--paper);
 }
 
 .add-customer-copy code {
   font-size: 0.9em;
   padding: 0.1rem 0.35rem;
   border-radius: 6px;
-  background: rgba(15, 118, 110, 0.1);
-  color: var(--teal);
+  background: rgba(64, 91, 255, 0.18);
+  color: var(--signal);
 }
 
 .form-hint {
   margin: 0;
-  color: var(--teal);
+  color: var(--accent);
   font-size: 0.9rem;
   font-weight: 500;
 }
@@ -447,7 +510,7 @@ body {
   padding: 1.1rem 1.1rem 0.4rem;
   border: 1px solid var(--line);
   border-radius: calc(var(--radius) + 4px);
-  background: rgba(255, 255, 255, 0.78);
+  background: var(--carbon);
   backdrop-filter: blur(10px);
   box-shadow: var(--shadow);
 }
@@ -521,11 +584,11 @@ th {
 
 .sort-btn:hover,
 .sort-btn.is-active {
-  color: var(--teal);
+  color: var(--accent);
 }
 
 .sort-btn:focus-visible {
-  outline: 2px solid rgba(15, 118, 110, 0.35);
+  outline: 2px solid rgba(64, 91, 255, 0.45);
   outline-offset: 3px;
   border-radius: 4px;
 }
@@ -537,7 +600,7 @@ th {
 
 .customer-row:hover,
 .customer-row:focus-visible {
-  background: rgba(15, 118, 110, 0.06);
+  background: rgba(64, 91, 255, 0.12);
   outline: none;
 }
 
@@ -570,13 +633,13 @@ th {
   height: 0.45rem;
   overflow: hidden;
   border-radius: 999px;
-  background: rgba(20, 33, 43, 0.08);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .health-fill {
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, #0f766e, #2dd4bf);
+  background: linear-gradient(90deg, #405bff, #3dd6f5);
   transition: width 0.35s ease;
 }
 
@@ -588,6 +651,10 @@ th {
   background: linear-gradient(90deg, #c2410c, #fb7185);
 }
 
+.health-fill.is-healthy {
+  background: linear-gradient(90deg, #405bff, #3dd6f5);
+}
+
 .badge {
   display: inline-block;
   padding: 0.3rem 0.65rem;
@@ -597,8 +664,8 @@ th {
 }
 
 .badge.healthy {
-  background: var(--teal-soft);
-  color: var(--teal);
+  background: var(--healthy-soft);
+  color: var(--healthy);
 }
 
 .badge.at-risk {
@@ -634,7 +701,7 @@ th {
   padding: 0.55rem 0.9rem;
   border: 1px solid var(--line);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.8);
+  background: var(--carbon);
   color: var(--ink);
   font: inherit;
   font-size: 0.92rem;
@@ -644,8 +711,9 @@ th {
 }
 
 .btn-back:hover {
-  border-color: rgba(15, 118, 110, 0.45);
-  background: #fff;
+  border-color: rgba(112, 132, 255, 0.55);
+  background: rgba(64, 91, 255, 0.12);
+  color: var(--paper);
 }
 
 .detail-hero {
@@ -656,7 +724,7 @@ th {
   padding: 1.25rem 1.3rem;
   border: 1px solid var(--line);
   border-radius: calc(var(--radius) + 4px);
-  background: rgba(255, 255, 255, 0.82);
+  background: var(--carbon);
   box-shadow: var(--shadow);
 }
 
@@ -706,10 +774,10 @@ th {
 
 .detail-guidance {
   padding: 1.2rem 1.3rem;
-  border: 1px solid rgba(15, 118, 110, 0.22);
+  border: 1px solid rgba(64, 91, 255, 0.3);
   border-radius: calc(var(--radius) + 4px);
   background:
-    linear-gradient(135deg, rgba(216, 243, 239, 0.55), rgba(255, 255, 255, 0.88));
+    linear-gradient(135deg, rgba(64, 91, 255, 0.16), rgba(25, 25, 25, 0.95));
   box-shadow: var(--shadow);
 }
 
@@ -736,7 +804,7 @@ th {
   padding: 1.2rem 1.3rem 1.35rem;
   border: 1px solid var(--line);
   border-radius: calc(var(--radius) + 4px);
-  background: rgba(255, 255, 255, 0.82);
+  background: var(--carbon);
   box-shadow: var(--shadow);
 }
 
@@ -799,7 +867,7 @@ th {
   padding: 0.45rem 0.55rem;
   border: 1px solid var(--line);
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.95);
+  background: #121212;
   color: var(--ink);
   font: inherit;
   font-size: 0.95rem;
@@ -809,8 +877,8 @@ th {
 }
 
 .factor-input:focus {
-  border-color: var(--teal);
-  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.18);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(64, 91, 255, 0.28);
 }
 
 .meeting-field {
@@ -823,15 +891,15 @@ th {
   padding: 0.7rem 0.85rem;
   border: 1px solid var(--line);
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.95);
+  background: #121212;
   color: var(--ink);
   font: inherit;
   outline: none;
 }
 
 .meeting-field input[type="date"]:focus {
-  border-color: var(--teal);
-  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.18);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(64, 91, 255, 0.28);
 }
 
 /* ----- Responsive ----- */
