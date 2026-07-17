@@ -43,11 +43,12 @@
 
           <section class="add-customer" aria-label="Add a customer">
             <div class="add-customer-copy">
-              <p class="section-kicker">New feature</p>
+              <p class="section-kicker">Persisted in your browser</p>
               <h2>Add a customer</h2>
               <p>
-                Practice forms: fill this out and the new row appears in the
-                list below. Data stays in the browser until you refresh.
+                New customers are saved with <code>localStorage</code>, so they
+                stick around after you refresh. Use reset if you want the
+                original demo list back.
               </p>
             </div>
             <form id="add-customer-form" class="add-form">
@@ -94,7 +95,10 @@
               </label>
               <div class="form-actions">
                 <button type="submit" class="btn-primary">Add customer</button>
-                <p class="form-hint" id="form-hint" hidden>Added to the list.</p>
+                <button type="button" class="btn-secondary" id="reset-demo-data">
+                  Reset demo data
+                </button>
+                <p class="form-hint" id="form-hint" hidden>Saved in this browser.</p>
               </div>
             </form>
           </section>

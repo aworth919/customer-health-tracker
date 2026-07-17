@@ -1,22 +1,25 @@
 /* ============================================================
    Pulse — app logic (JavaScript)
    This file:
-   1. Holds mock customer data
+   1. Holds mock customer data (and saves it in the browser)
    2. Figures out health status from a score
    3. Draws the summary + table
    4. Listens for search / filter clicks
    5. Handles the “Add customer” form
    6. Switches between list view and detail view
+   7. Persists customers with localStorage
    ============================================================ */
 
 /** @typedef {"healthy" | "at-risk" | "critical"} HealthStatus */
 
+/** Key used in the browser’s localStorage */
+const STORAGE_KEY = "pulse-customers-v1";
+
 /**
- * Mock customers — pretend this came from Looker / Gong / CRM.
- * score: overall health 0–100
- * factors: the inputs that make up that score (mock)
+ * Starter mock data — used the first time (or after a reset).
+ * Pretend this came from Looker / Gong / CRM.
  */
-const customers = [
+const SEED_CUSTOMERS = [
   {
     id: 1,
     name: "Acme Robotics",
@@ -138,6 +141,53 @@ const customers = [
     },
   },
 ];
+
+/** Deep-copy the seed list so we never mutate the original by accident */
+function cloneSeedCustomers() {
+  return JSON.parse(JSON.stringify(SEED_CUSTOMERS));
+}
+
+/** Make sure older/partial saved rows still have factors */
+function normalizeCustomer(customer) {
+  const lastTouch = customer.lastTouch || todayIsoDate();
+  const score = Number(customer.score);
+
+  return {
+    id: Number(customer.id),
+    name: String(customer.name || "Untitled"),
+    plan: String(customer.plan || "Starter"),
+    owner: String(customer.owner || "Unassigned"),
+    score: Number.isFinite(score) ? score : 0,
+    lastTouch,
+    factors: customer.factors || buildFactorsFromScore(score || 0, lastTouch),
+  };
+}
+
+/** Load from localStorage, or fall back to the seed list */
+function loadCustomers() {
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    if (!raw) return cloneSeedCustomers();
+
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed) || parsed.length === 0) {
+      return cloneSeedCustomers();
+    }
+
+    return parsed.map(normalizeCustomer);
+  } catch (error) {
+    console.warn("Could not load saved customers; using seed data.", error);
+    return cloneSeedCustomers();
+  }
+}
+
+/** Save the current list so it survives a refresh */
+function saveCustomers() {
+  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(customers));
+}
+
+/** Working list — starts from storage or seed */
+let customers = loadCustomers();
 
 /** What the user currently has selected */
 const state = {
@@ -526,6 +576,8 @@ function handleAddCustomer(event) {
     factors: buildFactorsFromScore(score, lastTouch),
   });
 
+  saveCustomers();
+
   form.reset();
   form.elements.score.value = "70";
 
@@ -538,13 +590,37 @@ function handleAddCustomer(event) {
   render();
 }
 
-/** Wire up search, filters, form, row clicks, and back button */
+/** Wipe saved data and restore the original 8 mock customers */
+function resetDemoData() {
+  const confirmed = window.confirm(
+    "Reset to the original demo customers? This clears anything you added."
+  );
+  if (!confirmed) return;
+
+  customers = cloneSeedCustomers();
+  state.selectedId = null;
+  state.search = "";
+  state.status = "all";
+  saveCustomers();
+
+  const searchInput = document.getElementById("search-input");
+  searchInput.value = "";
+
+  document.querySelectorAll("#status-filters .chip").forEach((chip) => {
+    chip.classList.toggle("is-active", chip.dataset.status === "all");
+  });
+
+  render();
+}
+
+/** Wire up search, filters, form, row clicks, back, and reset */
 function setupEvents() {
   const searchInput = document.getElementById("search-input");
   const filterRow = document.getElementById("status-filters");
   const addForm = document.getElementById("add-customer-form");
   const tbody = document.getElementById("customer-tbody");
   const backButton = document.getElementById("back-to-list");
+  const resetButton = document.getElementById("reset-demo-data");
 
   searchInput.addEventListener("input", (event) => {
     state.search = event.target.value;
@@ -582,6 +658,7 @@ function setupEvents() {
   });
 
   backButton.addEventListener("click", closeCustomer);
+  resetButton.addEventListener("click", resetDemoData);
 }
 
 /** Kick everything off when the page loads */

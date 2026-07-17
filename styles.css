@@ -320,6 +320,32 @@ body {
   transform: translateY(1px);
 }
 
+.btn-secondary {
+  padding: 0.75rem 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.btn-secondary:hover {
+  border-color: rgba(15, 118, 110, 0.4);
+  background: #fff;
+}
+
+.add-customer-copy code {
+  font-size: 0.9em;
+  padding: 0.1rem 0.35rem;
+  border-radius: 6px;
+  background: rgba(15, 118, 110, 0.1);
+  color: var(--teal);
+}
+
 .form-hint {
   margin: 0;
   color: var(--teal);
