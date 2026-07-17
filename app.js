@@ -11,6 +11,7 @@
    8. Edits score drivers on the detail page
    9. Imports real customers from a Looker CSV
   10. Sorts the customer table by column
+  11. Writes current-state + next-steps copy on the detail page
    ============================================================ */
 
 /** @typedef {"healthy" | "at-risk" | "critical"} HealthStatus */
@@ -222,15 +223,150 @@ function statusLabel(status) {
   return "Healthy";
 }
 
-/** Simple CS-style next step based on status */
-function recommendedAction(status) {
+/**
+ * Find the weakest score driver so we can mention it in plain language.
+ * Returns { key, label, value } or null if factors are missing.
+ */
+function weakestFactor(factors) {
+  if (!factors) return null;
+
+  let weakest = null;
+  FACTOR_META.forEach((meta) => {
+    const value = Number(factors[meta.key]);
+    if (Number.isNaN(value)) return;
+    if (!weakest || value < weakest.value) {
+      weakest = { key: meta.key, label: meta.label, value };
+    }
+  });
+  return weakest;
+}
+
+/**
+ * Build ~2 sentences describing where this customer stands today.
+ * Uses score/status plus optional Looker fields (health label, risk, tickets, etc.).
+ * Generated on render — not stored in localStorage.
+ *
+ * @param {object} customer
+ * @param {{ score?: number, factors?: object }} [overrides] — used while editing drivers live
+ */
+function currentStateSummary(customer, overrides = {}) {
+  const score = overrides.score ?? customer.score;
+  const factors = overrides.factors ?? customer.factors;
+  const status = getStatus(score);
+  const meetingDays = daysSince(factors?.lastMeeting || customer.lastTouch);
+  const openTickets = Number(customer.supportTicketsOpen) || 0;
+  const weakest = weakestFactor(factors);
+
+  // Sentence 1: overall health (prefer Looker label when present)
+  let sentence1;
+  if (customer.healthLabel) {
+    sentence1 = `${customer.name} is marked ${customer.healthLabel} in Looker with a Pulse score of ${score} (${statusLabel(status).toLowerCase()}).`;
+  } else if (status === "critical") {
+    sentence1 = `${customer.name} is in critical shape with a health score of ${score}, so retention needs attention soon.`;
+  } else if (status === "at-risk") {
+    sentence1 = `${customer.name} is at risk with a health score of ${score} — solid enough to recover, but not yet stable.`;
+  } else {
+    sentence1 = `${customer.name} looks healthy with a score of ${score}, and the account is tracking in a good place.`;
+  }
+
+  // Sentence 2: supporting context (risk notes, tickets, meetings, weak driver)
+  const bits = [];
+  if (customer.riskState) {
+    bits.push(`risk state is “${customer.riskState}”`);
+  }
+  if (customer.riskReason) {
+    bits.push(`notes mention ${customer.riskReason.replace(/\.$/, "")}`);
+  }
+  if (openTickets > 0) {
+    bits.push(`${openTickets} support ticket${openTickets === 1 ? "" : "s"} still open`);
+  }
+  if (meetingDays >= 21) {
+    bits.push(`last meeting was ${meetingDays} days ago`);
+  } else if (meetingDays <= 7 && status === "healthy") {
+    bits.push(`last meeting was only ${meetingDays} day${meetingDays === 1 ? "" : "s"} ago`);
+  }
+  if (weakest && weakest.value < 70) {
+    bits.push(`${weakest.label.toLowerCase()} is the softest driver at ${weakest.value}`);
+  }
+  if (customer.productsInUse) {
+    bits.push(`products in use include ${customer.productsInUse}`);
+  }
+
+  let sentence2;
+  if (bits.length >= 2) {
+    sentence2 = `Right now, ${bits[0]}, and ${bits[1]}.`;
+  } else if (bits.length === 1) {
+    sentence2 = `Right now, ${bits[0]}.`;
+  } else if (status === "critical") {
+    sentence2 = `Engagement and adoption both look thin, so this account needs a clear recovery plan.`;
+  } else if (status === "at-risk") {
+    sentence2 = `A few drivers are lagging, so a focused check-in should clarify what is blocking progress.`;
+  } else {
+    sentence2 = `Usage and engagement look solid, so the main job is protecting momentum and spotting expansion.`;
+  }
+
+  return `${sentence1} ${sentence2}`;
+}
+
+/**
+ * Build ~2 sentences of recommended next steps for CS.
+ * Expands the old one-liner helper with richer, status-aware guidance
+ * and light personalization from tickets / risk / expansion flags.
+ *
+ * @param {object} customer
+ * @param {{ score?: number, factors?: object }} [overrides]
+ */
+function recommendedNextSteps(customer, overrides = {}) {
+  const score = overrides.score ?? customer.score;
+  const factors = overrides.factors ?? customer.factors;
+  const status = getStatus(score);
+  const openTickets = Number(customer.supportTicketsOpen) || 0;
+  const weakest = weakestFactor(factors);
+  const meetingDays = daysSince(factors?.lastMeeting || customer.lastTouch);
+
+  let sentence1;
+  let sentence2;
+
   if (status === "critical") {
-    return "Schedule an executive business review this week and confirm renewal risks.";
+    sentence1 =
+      "Schedule an executive business review this week and confirm renewal risks with the AE.";
+    if (customer.riskReason) {
+      sentence2 = `Bring a written plan that directly addresses “${customer.riskReason.replace(/\.$/, "")},” and agree on owners and dates before you leave the call.`;
+    } else if (openTickets > 0) {
+      sentence2 = `Clear the ${openTickets} open support ticket${openTickets === 1 ? "" : "s"} first so the conversation can focus on value, not firefighting.`;
+    } else {
+      sentence2 =
+        "Align on one recovery plan with clear owners, then send a short written summary the same day.";
+    }
+  } else if (status === "at-risk") {
+    sentence1 =
+      "Book a check-in within the next two weeks, review adoption gaps, and leave with one quick win.";
+    if (weakest && weakest.value < 65) {
+      sentence2 = `Prioritize lifting ${weakest.label.toLowerCase()} (currently ${weakest.value}) with a concrete enablement or usage goal.`;
+    } else if (meetingDays >= 21) {
+      sentence2 = `Re-establish cadence — it has been ${meetingDays} days since the last meeting — and confirm the next touch before you hang up.`;
+    } else if (openTickets > 0) {
+      sentence2 = `Triage the ${openTickets} open ticket${openTickets === 1 ? "" : "s"} so friction is not quietly eroding trust.`;
+    } else {
+      sentence2 =
+        "Share one success path they can copy, then set a follow-up to confirm it stuck.";
+    }
+  } else {
+    sentence1 =
+      "Keep the current cadence: share a recent success story and ask how else LaunchDarkly can help.";
+    if (customer.hasExpansion) {
+      sentence2 =
+        "There is an open expansion opportunity — partner with the AE on timing and who to involve next.";
+    } else if (customer.productsInUse && /experimentation/i.test(customer.productsInUse) === false) {
+      sentence2 =
+        "Ask whether Experimentation or a deeper feature set could unlock more value, and offer a short intro if they are curious.";
+    } else {
+      sentence2 =
+        "Ask for a referral or case study while momentum is strong, and note any expansion signals for the AE.";
+    }
   }
-  if (status === "at-risk") {
-    return "Book a check-in, review adoption gaps, and share one quick win.";
-  }
-  return "Keep the cadence: share a success story and ask for a referral or case study.";
+
+  return `${sentence1} ${sentence2}`;
 }
 
 /** Format YYYY-MM-DD into something easier to read */
@@ -831,6 +967,17 @@ function renderDetail() {
 
     ${csvExtrasHtml(customer)}
 
+    <section class="detail-summaries" aria-label="Customer summaries">
+      <article class="detail-guidance detail-guidance-state">
+        <h2>Current state of customer</h2>
+        <p id="detail-state-text">${escapeHtml(currentStateSummary(customer))}</p>
+      </article>
+      <article class="detail-guidance detail-guidance-next">
+        <h2>Recommended next steps</h2>
+        <p id="detail-guidance-text">${escapeHtml(recommendedNextSteps(customer))}</p>
+      </article>
+    </section>
+
     <section class="score-drivers" aria-label="Health score drivers">
       <div class="score-drivers-copy">
         <h2>Edit score drivers</h2>
@@ -858,11 +1005,6 @@ function renderDetail() {
         </div>
       </form>
     </section>
-
-    <article class="detail-guidance">
-      <h2>Suggested next step</h2>
-      <p id="detail-guidance-text">${recommendedAction(status)}</p>
-    </article>
   `;
 }
 
@@ -896,9 +1038,14 @@ function previewFactorEdits(form) {
   const scoreValue = document.getElementById("detail-score-value");
   const scoreFill = document.getElementById("detail-score-fill");
   const badge = document.getElementById("detail-status-badge");
+  const stateText = document.getElementById("detail-state-text");
   const guidance = document.getElementById("detail-guidance-text");
   const meetingLabel = document.getElementById("detail-meeting-label");
   const meetingMeta = document.getElementById("detail-meeting-meta");
+
+  // Rebuild summaries with the in-progress driver edits (before Save)
+  const customer = getCustomerById(state.selectedId);
+  const summaryOverrides = { score, factors };
 
   if (scoreValue) scoreValue.textContent = String(score);
   if (scoreFill) {
@@ -909,7 +1056,12 @@ function previewFactorEdits(form) {
     badge.textContent = statusLabel(status);
     badge.className = `badge ${status}`;
   }
-  if (guidance) guidance.textContent = recommendedAction(status);
+  if (customer && stateText) {
+    stateText.textContent = currentStateSummary(customer, summaryOverrides);
+  }
+  if (customer && guidance) {
+    guidance.textContent = recommendedNextSteps(customer, summaryOverrides);
+  }
 
   if (meetingLabel && meetingMeta && factors.lastMeeting) {
     const meetingAge = daysSince(factors.lastMeeting);

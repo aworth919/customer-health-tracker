@@ -696,6 +696,12 @@ th {
   display: none;
 }
 
+/* Stack hero, stats, summaries, and form with the same spacing */
+#detail-content {
+  display: grid;
+  gap: 1.25rem;
+}
+
 .btn-back {
   justify-self: start;
   padding: 0.55rem 0.9rem;
@@ -772,6 +778,12 @@ th {
   font-size: 0.88rem;
 }
 
+/* Two summary cards: current state + recommended next steps */
+.detail-summaries {
+  display: grid;
+  gap: 1rem;
+}
+
 .detail-guidance {
   padding: 1.2rem 1.3rem;
   border: 1px solid rgba(64, 91, 255, 0.3);
@@ -779,6 +791,12 @@ th {
   background:
     linear-gradient(135deg, rgba(64, 91, 255, 0.16), rgba(25, 25, 25, 0.95));
   box-shadow: var(--shadow);
+}
+
+.detail-guidance-state {
+  border-color: rgba(160, 174, 192, 0.35);
+  background:
+    linear-gradient(135deg, rgba(64, 91, 255, 0.08), rgba(25, 25, 25, 0.95));
 }
 
 .detail-guidance h2 {
@@ -789,7 +807,7 @@ th {
 
 .detail-guidance p {
   margin: 0;
-  max-width: 42rem;
+  max-width: 48rem;
   color: var(--ink);
   font-size: 1.02rem;
   line-height: 1.55;
