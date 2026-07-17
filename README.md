@@ -1,12 +1,30 @@
 # Pulse — Customer Health Tracker
 
-A beginner-friendly app for tracking customer health scores.
+A beginner-friendly LaunchDarkly-branded app for tracking customer health scores.
 
 Built with:
 
 - **HTML** — page structure
 - **CSS** — layout and styling
 - **JavaScript** — data, filters, detail view, and CSV import
+
+## Live site (GitHub Pages)
+
+Once Pages is enabled for this repo, the app is available at:
+
+**https://aworth919.github.io/customer-health-tracker/**
+
+### Enable Pages (one-time)
+
+1. Open [Settings → Pages](https://github.com/aworth919/customer-health-tracker/settings/pages)
+2. Under **Build and deployment**:
+   - **Source:** Deploy from a branch
+   - **Branch:** `main`
+   - **Folder:** `/ (root)`
+3. Click **Save**
+4. Wait 1–2 minutes, then open the live URL above
+
+Real CSV exports stay local (gitignored) and are not published with the site.
 
 ## Open it locally
 
